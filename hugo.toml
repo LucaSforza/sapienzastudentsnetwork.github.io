@@ -4,117 +4,118 @@ defaultContentLanguage = 'homepage'
 defaultContentLanguageInSubdir = false
 enableGitInfo = true
 custom_css = ["css/contributors.css", "assets/*.scss"]
+custom_ts = ["scripts/*.ts"]
 
 [languages]
-    [languages.homepage]
-        # BookSearch = false
-        contentDir = 'homepage'
-        disabled = false
-        languageName = 'Homepage'
-        title = "Homepage"
-        weight = 0
+[languages.homepage]
+# BookSearch = false
+contentDir = 'homepage'
+disabled = false
+languageName = 'Homepage'
+title = "Homepage"
+weight = 0
 
-        [languages.homepage.params]
-            contentDir = 'homepage'
+[languages.homepage.params]
+contentDir = 'homepage'
 
-    [languages.acsai]
-        contentDir = 'acsai'
-        disabled = false
-        languageName = 'ACSAI'
-        title = 'ACSAI'
-        weight = 1
+[languages.acsai]
+contentDir = 'acsai'
+disabled = false
+languageName = 'ACSAI'
+title = 'ACSAI'
+weight = 1
 
-        [languages.acsai.params]
-            contentDir = 'acsai'
+[languages.acsai.params]
+contentDir = 'acsai'
 
-    [languages.compsci]
-        contentDir = 'compsci'
-        disabled = false
-        languageName = 'Computer Science'
-        title = 'Computer Science'
-        weight = 2
+[languages.compsci]
+contentDir = 'compsci'
+disabled = false
+languageName = 'Computer Science'
+title = 'Computer Science'
+weight = 2
 
-        [languages.compsci.params]
-            contentDir = 'compsci'
+[languages.compsci.params]
+contentDir = 'compsci'
 
-    [languages.cybersec]
-        contentDir = 'cybersec'
-        disabled = false
-        languageName = 'Cybersecurity'
-        title = 'Cybersecurity'
-        weight = 3
+[languages.cybersec]
+contentDir = 'cybersec'
+disabled = false
+languageName = 'Cybersecurity'
+title = 'Cybersecurity'
+weight = 3
 
-        [languages.cybersec.params]
-        contentDir = 'cybersec'
+[languages.cybersec.params]
+contentDir = 'cybersec'
 
-    [languages.it]
-        contentDir = 'it'
-        disabled = false
-        languageName = 'Informatica'
-        title = 'Informatica'
-        weight = 4
+[languages.it]
+contentDir = 'it'
+disabled = false
+languageName = 'Informatica'
+title = 'Informatica'
+weight = 4
 
-        [languages.it.params]
-            contentDir = 'it'
+[languages.it.params]
+contentDir = 'it'
 
-    [languages.33525]
-        contentDir = '33525'
-        disabled = false
-        languageName = 'Filosofia'
-        title = 'Filosofia'
-        weight = 5
+[languages.33525]
+contentDir = '33525'
+disabled = false
+languageName = 'Filosofia'
+title = 'Filosofia'
+weight = 5
 
-        [languages.33525.params]
-            contentDir = '33525'
+[languages.33525.params]
+contentDir = '33525'
 
-    [languages.33526]
-        contentDir = '33526'
-        disabled = false
-        languageName = 'Filosofia e IA'
-        title = 'Filosofia e IA'
-        weight = 6
+[languages.33526]
+contentDir = '33526'
+disabled = false
+languageName = 'Filosofia e IA'
+title = 'Filosofia e IA'
+weight = 6
 
-        [languages.33526.params]
-            contentDir = '33526'
+[languages.33526.params]
+contentDir = '33526'
 
-    [languages.dev]
-        contentDir = 'dev'
-        disabled = true
-        languageName = 'Developers Wiki'
-        title = 'Developers Wiki'
-        weight = 7
+[languages.dev]
+contentDir = 'dev'
+disabled = true
+languageName = 'Developers Wiki'
+title = 'Developers Wiki'
+weight = 7
 
-    [languages.rooms]
-        contentDir = 'rooms'
-        disabled = false
-        languageName = 'Rooms'
-        title = 'Rooms'
-        weight = 8
+[languages.rooms]
+contentDir = 'rooms'
+disabled = false
+languageName = 'Rooms'
+title = 'Rooms'
+weight = 8
 
 [markup]
-    [markup.goldmark]
-        [markup.goldmark.extensions]
-            [markup.goldmark.extensions.passthrough]
-                enable = true
+[markup.goldmark]
+[markup.goldmark.extensions]
+[markup.goldmark.extensions.passthrough]
+enable = true
 
-                [markup.goldmark.extensions.passthrough.delimiters]
-                    block = [['\[', '\]'], ['$$', '$$']]
-                    inline = [['\(', '\)'], ['$', '$']]
+[markup.goldmark.extensions.passthrough.delimiters]
+block = [['\[', '\]'], ['$$', '$$']]
+inline = [['\(', '\)'], ['$', '$']]
 
-        [markup.goldmark.renderer]
-            unsafe = true
+[markup.goldmark.renderer]
+unsafe = true
 
 [params]
-    math = true
-    BookTheme = 'auto'
-    BookToC = true
-    BookLogo = 'logo.png'
-    BookSection = '*'
+math = true
+BookTheme = 'auto'
+BookToC = true
+BookLogo = 'logo.png'
+BookSection = '*'
 
-    # GitHub Stuff
-    BookRepo = 'https://github.com/sapienzastudentsnetwork/sapienzastudentsnetwork.github.io'
-    BookLastChangeLink = '{{ .Site.Params.BookRepo }}/commit/{{ .GitInfo.Hash }}'
-    BookEditLink = '{{ .Site.Params.BookRepo }}/edit/main/{{ .Path }}'
-    BookCommitPath = 'commit'
-    BookEditPath = 'edit/main'
-    BookDateFormat = '2 January 2006'
+# GitHub Stuff
+BookRepo = 'https://github.com/sapienzastudentsnetwork/sapienzastudentsnetwork.github.io'
+BookLastChangeLink = '{{ .Site.Params.BookRepo }}/commit/{{ .GitInfo.Hash }}'
+BookEditLink = '{{ .Site.Params.BookRepo }}/edit/main/{{ .Path }}'
+BookCommitPath = 'commit'
+BookEditPath = 'edit/main'
+BookDateFormat = '2 January 2006'

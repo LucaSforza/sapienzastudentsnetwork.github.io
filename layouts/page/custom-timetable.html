@@ -1,8 +1,11 @@
+
 {{ define "main" }}
 {{ partial "timetable.html" . }}
 
 {{ $pageDegreeCode := .Params.degreeCode }}
-
+{{ $ts := resources.Get "scripts/custom-timetable.ts" | js.Build}}
+<script src="{{ $ts.RelPermaLink}}">
+</script>
 <h1>{{ T "Subjs_CustomTimetable_Title" }}</h1>
 
 <!--{{ $excludedCodes := slice "33503" "33502" }}
@@ -17,7 +20,7 @@
             <li>{{ T "Subjs_Info_Text_1" }}</li>
             <li>{{ T "Subjs_Info_Text_2" }}</li>
             <li>{{ T "Subjs_Info_Text_3" }} Matteo <b>Collica</b> (<a href="https://telegram.me/Matypist">Telegram</a> | <a href="mailto:collica.2004949@studenti.uniroma1.it">Email</a>) {{ T "Subjs_Info_Text_4" }}</li>
-        </ul>
+      </ul>
     </details>
 
     <blockquote class="book-hint tip">
@@ -31,7 +34,7 @@
 
 <div class="relative" id="main">
     <!-- TODO: customizzare il pulsante con lo stile https://m3.material.io/components/all-buttons -->
-    <button class="addSubjs absolute right-0 top-2 flex items-center gap-2" onclick="openSubjectsDialog()">
+    <button class="addSubjs absolute right-0 top-2 flex items-center gap-2" onclick="openDialog('subjsPopUp')">
         {{ T "Subjs_CustomTimetable_AddButton" }}
         <!-- <span class="material-symbols-outlined">add</span> -->
     </button>
@@ -58,7 +61,7 @@
 </div>
 
 <dialog class="ml-0 h-full items-center rounded-r-3xl p-4 shadow-xl backdrop:backdrop-blur-sm" id="subjsPopUp"
-    onclick="closeSubjectsDialog()">
+    onclick='closeDialog(this.id)'>
     <div class="subjsDial flex h-full w-full flex-col items-start">
         <h2 id="subjsSelTitle">{{ T "Subjs_CustomTimetable_SelectMenuTitle" }}</h2>
         <div class="subjsList mb-4 h-full w-full overflow-y-scroll pr-4">
@@ -135,7 +138,16 @@
         <button id="subjsCloseMenu" onclick="closeSubjectsDialog()">
             {{ T "Subjs_CustomTimetable_CloseMenuButton" }}
         </button>
-    </div>
+        <button id="subjsAddCustomCourse" onclick="event.stopPropagation();openCustomCourseDialog()">
+              Add custom exam
+        </button>
+        <dialog id="subjsFormCoursePopUp" onclick='closeDialog(this.id)'>
+        <form>
+          <label for="courseName">Course Name:</label>
+      <input type="text" id="courseName" name="courseName"><br>
+        </form>
+      </dialog>
+  </div>
 </dialog>
 
 <!-- Add the "Timetables per teaching" part for all courses -->
@@ -143,157 +155,6 @@
     {{ partial "timetables-per-teaching.html" . }}
 {{ end }}
 
-<script>
-    const pageDegreeSubjects = new Set(
-        JSON.parse(`{{ $pageDegreeSubjects | jsonify }}`)
-    );
 
-    const selectedSubjects = new Set(
-        JSON.parse(localStorage.getItem("selectedSubjects")),
-    );
 
-    function toggleSubject(subjectId) {
-        let button = document.getElementById("dialog-" + subjectId);
-
-        if (selectedSubjects.has(subjectId)) {  // If subject is in JSON, then remove it
-            if (button.classList.contains("c-33502-disabled")) {
-                button.classList.remove("c-33502-disabled")
-                button.classList.add("c-33502")
-            } else if (button.classList.contains("c-33508-disabled")) {
-                button.classList.remove("c-33508-disabled")
-                button.classList.add("c-33508")
-            } else if (button.classList.contains("c-33516-disabled")) {
-                button.classList.remove("c-33516-disabled")
-                button.classList.add("c-33516")
-            } else if (button.classList.contains("c-33503-disabled")) {
-                button.classList.remove("c-33503-disabled")
-                button.classList.add("c-33503")
-            }
-
-            button.classList.remove(
-                "bg-black",
-                "text-white",
-                "dark:bg-white",
-                "dark:text-black",
-                "subjIsSelected"
-            );
-            button.classList.add(
-                "bg-gray-50",
-                "dark:bg-gray-900",
-                "dark:text-white",
-            );
-
-            let subjectCode = subjectId.split("-")[0];
-
-            // Hide this subject's timetable div only if the subject was not also added with another channel
-            let otherSubjectIdsWithSameCode = Array.from(
-                selectedSubjects,
-            ).filter((item) => item.startsWith(subjectCode));
-            if (otherSubjectIdsWithSameCode.length === 1) {
-                let subject_div = document.getElementById(subjectCode);
-                if (subject_div) subject_div.classList.add("hidden");
-            }
-
-            let channel_div = document.getElementById(subjectId);
-            if (channel_div) channel_div.classList.add("hidden");
-
-            selectedSubjects.delete(subjectId);
-        } else {    // If subject is not in the JSON, then add it
-            if (button.classList.contains("c-33502")) {
-                button.classList.add("c-33502-disabled")
-                button.classList.remove("c-33502")
-            } else if (button.classList.contains("c-33508")) {
-                button.classList.add("c-33508-disabled")
-                button.classList.remove("c-33508")
-            } else if (button.classList.contains("c-33516")) {
-                button.classList.add("c-33516-disabled")
-                button.classList.remove("c-33516")
-            } else if (button.classList.contains("c-33503")) {
-                button.classList.add("c-33503-disabled")
-                button.classList.remove("c-33503")
-            }
-
-            button.classList.remove(
-                "bg-gray-50",
-                "dark:bg-gray-900",
-                "dark:text-white",
-            );
-            button.classList.add(
-                "bg-black",
-                "text-white",
-                "dark:bg-white",
-                "dark:text-black",
-                "subjIsSelected"
-            );
-
-            let subjectCode = subjectId.split("-")[0];
-            let subject_div = document.getElementById(subjectCode);
-            if (subject_div) subject_div.classList.remove("hidden");
-
-            let channel_div = document.getElementById(subjectId);
-            if (channel_div) channel_div.classList.remove("hidden");
-
-            selectedSubjects.add(subjectId);
-        }
-
-        localStorage.setItem(
-            "selectedSubjects",
-            JSON.stringify(Array.from(selectedSubjects)),
-        );
-
-        fillTimetable("customSchedule", Array.from(selectedSubjects), Array.from(pageDegreeSubjects), 0);
-    }
-
-    addEventListener("DOMContentLoaded", () => {
-        for (const subjectId of selectedSubjects) {
-            const button = document.getElementById("dialog-" + subjectId);
-
-            if (button) { // Check if the button exists
-                if (button.classList.contains("c-33502")) {
-                    button.classList.add("c-33502-disabled");
-                    button.classList.remove("c-33502");
-                } else if (button.classList.contains("c-33508")) {
-                    button.classList.add("c-33508-disabled");
-                    button.classList.remove("c-33508");
-                } else if (button.classList.contains("c-33516")) {
-                    button.classList.add("c-33516-disabled");
-                    button.classList.remove("c-33516");
-                } else if (button.classList.contains("c-33503")) {
-                    button.classList.add("c-33503-disabled");
-                    button.classList.remove("c-33503");
-                }
-
-                button.classList.remove(
-                    "bg-gray-50",
-                    "dark:bg-gray-900",
-                    "dark:text-white",
-                );
-                button.classList.add(
-                    "bg-black",
-                    "text-white",
-                    "dark:bg-white",
-                    "dark:text-black",
-                    "subjIsSelected"
-                );
-            }
-
-            let subjectCode = subjectId.split("-")[0];
-            let subject_div = document.getElementById(subjectCode);
-            if (subject_div) subject_div.classList.remove("hidden");
-
-            let channel_div = document.getElementById(subjectId);
-            if (channel_div) channel_div.classList.remove("hidden");
-        }
-
-        fillTimetable("customSchedule", Array.from(selectedSubjects), Array.from(pageDegreeSubjects), 0);
-    });
-
-    function openSubjectsDialog() {
-        document.getElementById("subjsPopUp").showModal();
-    }
-
-    function closeSubjectsDialog() {
-        document.getElementById("subjsPopUp").close();
-    }
-</script>
 {{ end }}
